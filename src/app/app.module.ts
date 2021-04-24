@@ -1,3 +1,4 @@
+import { ClienteService } from './clientes/cliente.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
@@ -32,7 +33,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatInputModule,
     MatToolbarModule
   ],
-  providers: [],
+  providers: [ClienteService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
