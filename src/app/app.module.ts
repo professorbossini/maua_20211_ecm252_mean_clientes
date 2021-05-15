@@ -1,3 +1,4 @@
+import { AppRoutingModule } from './app-routing.module';
 import { ClienteService } from './clientes/cliente.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { HttpClientModule } from '@angular/common/http';
@@ -25,6 +26,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     ClienteListaComponent
   ],
   imports: [
+    AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
