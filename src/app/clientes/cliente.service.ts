@@ -32,6 +32,17 @@ export class ClienteService{
     })
   }
 
+  getCliente (idCliente: string){
+    return {...this.clientes.find((cli) => cli.id === idCliente)}
+  }
+
+  atualizarCliente (id: string, nome: string, fone: string, email: string){
+    const cliente: Cliente = {id, nome, fone, email};
+    this.httpClient.put(`http://localhost:3000/api/clientes/${id}`, cliente)
+    .subscribe((res) => console.log(res))
+
+  }
+
   adicionarCliente(nome: string, fone: string, email: string){
     const cliente: Cliente = {nome, fone, email};
     this.httpClient.post<{mensagem: string, id: string}>('http://localhost:3000/api/clientes', cliente)

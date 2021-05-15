@@ -13,8 +13,6 @@ const dbName = process.env.MONGODB_DATABASE;
 
 const stringConexao = `mongodb+srv://${dbUser}:${dbPassword}@${dbCluster}.mongodb.net/${dbName}?retryWrites=true&w=majority`
 
-
-
 mongoose.connect(stringConexao)
 .then(() => {
   console.log ("Conexão MongoDB OK");
@@ -58,6 +56,19 @@ app.get('/api/clientes', (req, res, next) => {
     });
   })
 })
+
+app.put('/api/clientes/:id', (req, res) => {
+  const cliente = new Cliente ({
+    _id: req.params.id,
+    nome: req.body.nome,
+    fone: req.body.fone,
+    email: req.body.email
+  });
+  Cliente.updateOne(
+    {_id: req.params.id},
+    cliente
+  );
+});
 
 module.exports = app;
 
