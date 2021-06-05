@@ -51,17 +51,19 @@ export class ClienteInserirComponent implements OnInit {
         //this.cliente = this.clienteService.getCliente(this.idCliente);
         this.clienteService.getCliente(this.idCliente).subscribe(dadosCli => {
           this.estaCarregando = false;
+          this.previewImagem = dadosCli.imagemURL
           this.cliente = {
             id: dadosCli._id,
             nome: dadosCli.nome,
             fone: dadosCli.fone,
-            email: dadosCli.email
+            email: dadosCli.email,
+            imagemURL: dadosCli.imagemURL
           }
           this.form.setValue({
             nome: this.cliente.nome,
             fone: this.cliente.fone,
             email: this.cliente.email,
-            imagem: null
+            imagem: this.cliente.imagemURL
           })
         })
       }
@@ -80,7 +82,8 @@ export class ClienteInserirComponent implements OnInit {
       this.clienteService.adicionarCliente(
         this.form.value.nome,
         this.form.value.fone,
-        this.form.value.email
+        this.form.value.email,
+        this.form.value.imagem
       );
     }
     else{
@@ -88,7 +91,8 @@ export class ClienteInserirComponent implements OnInit {
         this.idCliente,
         this.form.value.nome,
         this.form.value.fone,
-        this.form.value.email
+        this.form.value.email,
+        this.form.value.imagem
       )
     }
     this.form.reset();

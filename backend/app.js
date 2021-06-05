@@ -1,9 +1,12 @@
+const path = require ('path');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const app = express();
-app.use(express.json())
-app.use(cors())
+app.use(express.json());
+app.use('/imagens', express.static(path.join('backend/imagens')));
+app.use(cors());
+
 
 const clienteRoutes = require ('./rotas/clientes');
 const dbUser = process.env.MONGODB_USER;

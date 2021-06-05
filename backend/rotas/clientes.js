@@ -12,7 +12,7 @@ const MIME_TYPE_EXTENSAO_MAPA = {
 
 
 const armazenamento = multer.diskStorage({
-  destination: (req, res, callback) => {
+  destination: (req, file, callback) => {
     let e = MIME_TYPE_EXTENSAO_MAPA[file.mimetype] ? null : new Error ('Mime Type Invalido');
     callback(e, "backend/imagens")
   },
@@ -34,15 +34,24 @@ router.delete('/:id', (req, res) => {
 
 
 router.post('', multer({storage: armazenamento}).single('imagem'), (req, res, next) => {
+  const imagemURL = `${req.protocol}://${req.get('host')}`;
   const cliente = new Cliente({
     nome: req.body.nome,
     fone: req.body.fone,
-    email: req.body.email
+    email: req.body.email,
+    imagemURL: `${imagemURL}/imagens/${req.file.filename}`
   });
   cliente.save().then((clienteInserido) => {
 
     res.status(201).json({
-      id: clienteInserido._id,
+      //id: clienteInserido._id,
+      cliente: {
+        id: clienteInserido._id,
+        nome: clienteInserido.nome,
+        fone: clienteInserido.fone,
+        email: clienteInserido.email,
+        imagemURL: clienteInserido.imagemURL,
+      },
       mensagem: "Cliente inserido"
     });
   });
@@ -50,8 +59,17 @@ router.post('', multer({storage: armazenamento}).single('imagem'), (req, res, ne
 
 
 router.get('', (req, res, next) => {
-  Cliente.find().then(documents => {
-    console.log(documents);
+  //console.log(req.query);
+  const pageSize = +req.query.pageSize;
+  const page = +req.query.page;
+  const consulta = Cliente.find();
+  if (pageSize && page){
+    consulta
+    .skip(pageSize * (page - 1))
+    .limit(pageSize);
+  }
+  consulta.then(documents => {
+    //console.log(documents);
     res.status(200).json({
       mensagem: "Tudo OK",
       clientes: documents
@@ -73,16 +91,26 @@ router.get('/:id', (req, res) => {
   });
 });
 
-router.put('/:id', (req, res) => {
-  const cliente = new Cliente({
-    _id: req.params.id,
-    nome: req.body.nome,
-    fone: req.body.fone,
-    email: req.body.email
-  });
-  Cliente.updateOne({ _id: req.params.id }, cliente).then((resultado) => {
-    res.status(200).json({ mensagem: "Atualização realizada com sucesso" });
-  });
+router.put(
+  '/:id',
+  multer({storage: armazenamento}).single('imagem'),
+  (req, res) => {
+    console.log(req.file);
+    let imagemURL = req.body.imagemURL;
+    if (req.file){
+      const url = `${req.protocol}://${req.get('host')}`
+      imagemURL = `${url}/imagens/${req.file.filename}`
+    }
+    const cliente = new Cliente({
+      _id: req.params.id,
+      nome: req.body.nome,
+      fone: req.body.fone,
+      email: req.body.email,
+      imagemURL: imagemURL
+    });
+    Cliente.updateOne({ _id: req.params.id }, cliente).then((resultado) => {
+      res.status(200).json({ mensagem: "Atualização realizada com sucesso" });
+    });
 });
 
 module.exports = router;

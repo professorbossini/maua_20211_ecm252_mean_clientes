@@ -2,6 +2,9 @@
 <mat-accordion *ngIf="clientes.length > 0 && !estaCarregando">
   <mat-expansion-panel *ngFor="let cliente of clientes">
     <mat-expansion-panel-header>{{cliente.nome}}</mat-expansion-panel-header>
+    <div class="cliente-imagem">
+      <img [src]="cliente.imagemURL" [alt]="cliente.nome">
+    </div>
     <p>{{cliente.fone}}</p>
     <p>{{cliente.email}}</p>
     <mat-action-row>
@@ -10,5 +13,13 @@
     </mat-action-row>
   </mat-expansion-panel>
 </mat-accordion>
+<mat-paginator
+  *ngIf="clientes.length > 0"
+  [length]="totalDeClientes"
+  [pageSize]="totalDeClientesPorPagina"
+  [pageSizeOptions]="opcoesTotalDeClientesPorPagina"
+  (page)="onPaginaAlterada($event)">
+
+</mat-paginator>
 <p *ngIf="clientes.length <= 0 && !estaCarregando"
 class="mat-body-1" style="text-align: center">Nenhum cliente cadastrado</p>
