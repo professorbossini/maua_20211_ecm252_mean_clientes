@@ -9,6 +9,8 @@
 
 .env
 
+backend/imagens
+
 # dependencies
 /node_modules
 

@@ -63,6 +63,7 @@ router.get('', (req, res, next) => {
   const pageSize = +req.query.pageSize;
   const page = +req.query.page;
   const consulta = Cliente.find();
+  let clientesEncontrados;
   if (pageSize && page){
     consulta
     .skip(pageSize * (page - 1))
@@ -70,9 +71,14 @@ router.get('', (req, res, next) => {
   }
   consulta.then(documents => {
     //console.log(documents);
+    clientesEncontrados = documents;
+    return Cliente.count()
+  })
+  .then((count) => {
     res.status(200).json({
       mensagem: "Tudo OK",
-      clientes: documents
+      clientes: clientesEncontrados,
+      maxClientes: count
     });
   });
 });

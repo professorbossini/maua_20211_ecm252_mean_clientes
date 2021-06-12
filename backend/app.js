@@ -9,6 +9,7 @@ app.use(cors());
 
 
 const clienteRoutes = require ('./rotas/clientes');
+const usuarioRoutes = require ('./rotas/usuarios');
 const dbUser = process.env.MONGODB_USER;
 const dbPassword = process.env.MONGODB_PASSWORD;
 const dbCluster = process.env.MONGODB_CLUSTER;
@@ -25,6 +26,7 @@ mongoose.connect(stringConexao)
 })
 
 app.use('/api/clientes', clienteRoutes);
+app.use('/api/usuarios', usuarioRoutes);
 
 module.exports = app;
 
